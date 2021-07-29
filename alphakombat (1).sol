@@ -1,10 +1,7 @@
 
  // SPDX-License-Identifier: Unlicensed
 
-/**
- * @dev StormCell
- * @author Victor Tin <victor@stormcelltech.com>
- */
+
 pragma solidity ^0.6.12;
 
 abstract contract Context {
