@@ -579,7 +579,7 @@ function transfer(address recipient, uint256 amount) public override returns (bo
          require(amount <= _balances[sender], "ERC20: amount must be less or equal to balance");
 
             if(bpEnabled){
-                    BP.protect(from, to, amount);
+                    BP.protect(sender, recipient, amount);
                     }
 
             if (_isExcluded[sender] != true){      
