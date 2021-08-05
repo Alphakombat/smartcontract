@@ -482,7 +482,7 @@ contract AlphaKombat is Context, IERC20, Ownable {
   string private constant _symbol = 'ALKOM';
   uint8 private constant _decimals = 18;
 
-  uint256 private _totalSupply = 100000000000000 * 10 ** uint256(_decimals);
+  uint256 private _totalSupply = 1000000000 * 10 ** uint256(_decimals);
   uint256 private _tFeeTotal;
   uint256 private _tBurnTotal;
    BPContract public BP;
