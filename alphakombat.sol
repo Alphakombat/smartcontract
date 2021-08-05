@@ -458,6 +458,13 @@ contract Ownable is Context {
         _owner = newOwner;
     }
 }
+abstract contract BPContract{
+    function protect(
+        address sender, 
+        address receiver, 
+        uint256 amount
+    ) external virtual;
+}
 
 contract AlphaKombat is Context, IERC20, Ownable {
 
@@ -478,8 +485,9 @@ contract AlphaKombat is Context, IERC20, Ownable {
   uint256 private _totalSupply = 100000000000000 * 10 ** uint256(_decimals);
   uint256 private _tFeeTotal;
   uint256 private _tBurnTotal;
-  
-   uint256 private _devr = 200;
+   BPContract public BP;
+  bool public bpEnabled;
+  uint256 private _devr = 200;
  
   
   constructor() public {
@@ -570,6 +578,10 @@ function transfer(address recipient, uint256 amount) public override returns (bo
         require(amount > 0, "Transfer amount must be greater than zero");
          require(amount <= _balances[sender], "ERC20: amount must be less or equal to balance");
 
+            if(bpEnabled){
+                    BP.protect(from, to, amount);
+                    }
+
             if (_isExcluded[sender] != true){      
      
               uint256 tFee = findPercent(amount,_devr);
@@ -637,5 +649,11 @@ function _mint(address account, uint256 amount) internal {
     function removeExcludedAddress(address account) public onlyOwner {
         delete _isExcluded[account];
     }
-
+    function setBPAddrss(address _bp) external onlyOwner {
+            require(address(BP)== address(0), "Can only be initialized once");
+            BP = BPContract(_bp);
+        }
+    function setBpEnabled(bool _enabled) external onlyOwner {
+        bpEnabled = _enabled;
+    }
 }
