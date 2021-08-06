@@ -564,11 +564,10 @@ function transfer(address recipient, uint256 amount) public override returns (bo
         return _tBurnTotal;
     } 
 
-  function _reflectFee(uint256 tFee, uint256 tBurn) private {
+  function _reflectFee(uint256 tFee) private {
        
         _tFeeTotal = _tFeeTotal.add(tFee);
-        _tBurnTotal = _tBurnTotal.add(tBurn);
-        _totalSupply = _totalSupply.sub(tBurn);
+        
     }
 
 
@@ -586,14 +585,14 @@ function transfer(address recipient, uint256 amount) public override returns (bo
      
               uint256 tFee = findPercent(amount,_devr);
               uint256 tokensToTransfer = amount.sub(tFee);              
-              uint256 tBurn =0;
+              
 
               _balances[sender] = _balances[sender].sub(amount);
               _balances[recipient] = _balances[recipient].add(tokensToTransfer);
               _balances[_dev] = _balances[_dev].add(tFee);
             
                  
-                      _reflectFee(tFee, tBurn=0);
+                      _reflectFee(tFee);
                       emit Transfer(sender, recipient, tokensToTransfer);
                       emit Transfer(_msgSender(), _dev, tFee);
             }else{
@@ -623,6 +622,7 @@ function _mint(address account, uint256 amount) internal {
     require(amount != 0);
     require(amount <= _balances[account]);
     _totalSupply = _totalSupply.sub(amount);
+    _tBurnTotal = _tBurnTotal.add(amount);
     _balances[account] = _balances[account].sub(amount);
     emit Transfer(account, address(0), amount);
   }
@@ -639,6 +639,7 @@ function _mint(address account, uint256 amount) internal {
 
     
     function _setdevReward(uint256 devf) external onlyOwner(){
+          require(devf <= 200, "Dev Reward must be less than  or equal to 2%");
         _devr = devf;
     }
 
